@@ -27,7 +27,7 @@ version: 1
 # playbooks_root_dir
 # location of the playbooks that the service will start
 # playbooks_root_dir: './samples'
-playbooks_root_dir: '/home/${USER}/qubinode-installer/'
+playbooks_root_dir: '${HOME}/qubinode-installer/'
 
 # port
 # tcp port for the service to listen to
@@ -53,9 +53,9 @@ EOF
 function configure_ansible_runner_systemd(){
     if [ ! -f /usr/share/ansible-runner-service ];
     then
-      mkdir -p /home/"${USER}"/qubinode-installer/env
-      ln -s /home/"${USER}"/qubinode-installer/playbooks  /home/"${USER}"/qubinode-installer/project 
-      sudo ln -s  /home/"${USER}"/qubinode-installer/playbooks /etc/ansible-runner-service/project
+      mkdir -p ${HOME}/qubinode-installer/env
+      ln -s ${HOME}/qubinode-installer/playbooks  ${HOME}/qubinode-installer/project 
+      sudo ln -s  ${HOME}/qubinode-installer/playbooks /etc/ansible-runner-service/project
       if [ ! -f /etc/ansible-runner-service/config.yaml ]
       then 
         ansible_runner_config_yaml
@@ -65,12 +65,4 @@ function configure_ansible_runner_systemd(){
       sudo systemctl start ansible-runner-service.service
       #sudo systemctl status ansible-runner-service.service
     fi
-}
-
-# Change valut key path in ansible.cfg file
-function update_ansible_cfg(){
-    if [ -f /home/"${USER}"/qubinode-installer/ansible.cfg ];
-    then 
-      sed -i 's/vault_password_file  = ~\/.vaultkey/vault_password_file  = \/home\/'"${USER}"'\/.vaultkey/g'  /home/"${USER}"/qubinode-installer/ansible.cfg
-    fi 
 }

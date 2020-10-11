@@ -1,7 +1,7 @@
 function configure_rhel8_packages(){
     sudo dnf clean all > /dev/null 2>&1
     sudo dnf install -y -q -e 0  python3-pip ansible git vim  python3-devel gcc
-    sudo dnf  install -y -q -e 0 container-tools -y
+    sudo dnf module install -y -q -e 0 container-tools
 }
 
 function configure_centos8_packages(){
@@ -46,8 +46,8 @@ function install_requirements(){
 }
 
 function configure_vault_key(){
-    if [ ! -f /home/${USER}/.vaultkey ];
+    if [ ! -f ${HOME}/.vaultkey ];
     then
-      openssl rand -base64 512|xargs > "/home/${USER}/.vaultkey"
+      openssl rand -base64 512|xargs > "${HOME}/.vaultkey"
     fi
 }
