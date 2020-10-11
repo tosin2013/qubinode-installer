@@ -1,6 +1,7 @@
 ---
 - name: Configure qubinode variables
   hosts: localhost
+  remote_user: "{{ admin_user }}"
   become: true
   gather_facts: true
   roles:

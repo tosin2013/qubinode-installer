@@ -56,6 +56,7 @@ function configure_ansible_runner_systemd(){
       mkdir -p /home/"${USER}"/qubinode-installer/env
       ln -s /home/"${USER}"/qubinode-installer/playbooks  /home/"${USER}"/qubinode-installer/project 
       sudo ln -s  /home/"${USER}"/qubinode-installer/playbooks /etc/ansible-runner-service/project
+      sudo touch /etc/ansible-runner-service/ansible-runner-service.log
       if [ ! -f /etc/ansible-runner-service/config.yaml ]
       then 
         ansible_runner_config_yaml

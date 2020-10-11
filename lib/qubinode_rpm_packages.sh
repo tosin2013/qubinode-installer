@@ -1,6 +1,6 @@
 function configure_rhel8_packages(){
     sudo dnf clean all > /dev/null 2>&1
-    sudo dnf install -y -q -e 0  python3-pip ansible git vim  python3-devel gcc
+    sudo dnf install -y -q -e 0  python3-pip ansible git vim  python3-devel gcc jq
     sudo dnf  install -y -q -e 0 container-tools -y
 }
 
@@ -11,12 +11,12 @@ function configure_centos8_packages(){
     sudo dnf -y install 'dnf-command(copr)'
     sudo dnf -y copr enable rhcontainerbot/container-selinux
     sudo curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable.repo https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/CentOS_8/devel:kubic:libcontainers:stable.repo
-    sudo dnf -y install  buildah skopeo podman
+    sudo dnf -y install  buildah skopeo podman jq
 }
 
 function configure_fedora_packages(){
     sudo dnf clean all > /dev/null 2>&1
-    sudo dnf install -y -q -e 0  python3-pip ansible git vim  python3-devel gcc
+    sudo dnf install -y -q -e 0  python3-pip ansible git vim  python3-devel gcc jq
     sudo dnf  install -y -q -e 0  buildah skopeo podman -y
 }
 
