@@ -46,8 +46,8 @@ function install_requirements(){
 }
 
 function configure_vault_key(){
-    if [ ! -f /home/${USER}/.vaultkey ];
+    if [ ! -f ${HOME}/.vaultkey ];
     then
-      openssl rand -base64 512|xargs > "/home/${USER}/.vaultkey"
+      openssl rand -base64 512|xargs > "${HOME}/.vaultkey"
     fi
 }

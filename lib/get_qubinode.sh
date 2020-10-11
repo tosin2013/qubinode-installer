@@ -53,7 +53,7 @@ function wget_download(){
 
 # start the qubinode installer check and download if does not exist
 function start_qubinode_download(){
-  if  [ ! -d /home/${USER}/qubinode-installer ];
+  if  [ ! -d ${HOME}/qubinode-installer ];
   then 
     if [ ! -x /usr/bin/unzip ] ; then
       echo "unzip found on system."
@@ -80,9 +80,9 @@ function start_qubinode_download(){
 
 # Remove qubinode installer and conpoments
 function remove_qubinode_folder(){
-    if [ -d  /home/"${USER}"/qubinode-installer ];
+    if [ -d  ${HOME}/qubinode-installer ];
     then 
-        sudo rm -rf /home/"${USER}"/qubinode-installer
+        sudo rm -rf ${HOME}/qubinode-installer
     fi 
 
     if [ -d /usr/share/ansible-runner-service ] && [ ! -f /etc/systemd/system/ansible-runner-service.service ];
@@ -92,10 +92,10 @@ function remove_qubinode_folder(){
       sudo rm -rf /tmp/ansible-runner-service/
     fi 
 
-    if [ -f /home/"${USER}"/.ssh/id_rsa ];
+    if [ -f ${HOME}/.ssh/id_rsa ];
     then
-      sudo rm -rf /home/"${USER}"/.ssh/id_rsa 
-      sudo rm -rf /home/"${USER}"/.ssh/id_rsa.pub
+      sudo rm -rf ${HOME}/.ssh/id_rsa 
+      sudo rm -rf ${HOME}/.ssh/id_rsa.pub
     fi  
 
 }
