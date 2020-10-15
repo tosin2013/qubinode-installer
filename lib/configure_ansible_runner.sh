@@ -36,7 +36,7 @@ playbooks_root_dir: '${HOME}/qubinode-installer/'
 # ip_address
 # Specific IP address to bind to
 # ip_address: '0.0.0.0'
-target_user: root
+target_user: ${USER}
 
 #event_cache_size: 3
 
