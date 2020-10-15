@@ -9,7 +9,8 @@ function generate_sshkey(){
 function set_ansible_config_env(){
     export ANSIBLE_CONFIG="${HOME}/qubinode-installer/ansible.cfg"
     echo 'export ANSIBLE_CONFIG="'"${HOME}"'/qubinode-installer/ansible.cfg"' >> ${HOME}/.bashrc
-    sed -e "s|vault_password_file  = ~/.vaultkey|vault_password_file  = $HOME/.vaultkey|g" ansible.cfg
+    sed -i "s|vault_password_file  = ~/.vaultkey|vault_password_file  = $HOME/.vaultkey|g" ansible.cfg
 }
 
 
+cd
