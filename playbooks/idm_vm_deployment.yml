@@ -4,10 +4,10 @@
   become: yes
   gather_facts: yes
   vars_files:
-    - vars/all.yml
-    - vars/kvm_host.yml
-    - vars/vault.yml
-    - vars/idm.yml
+    - ../inventory/rhel8_host_vars
+    - ../inventory/kvm_host.yml
+    - ../env/passwords
+    - host_vars/idm_dns.yml
   vars:
     vm_name: "{{ dns_server_vm.dns_name }}"
     vm_cpu: "{{ dns_server_vm.dns_vcpu }}"

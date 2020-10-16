@@ -41,7 +41,7 @@ function configure_rhel7_subscriptions(){
 }
 
 function install_requirements(){
-    sudo pip3 install -r "$(pwd)/lib/requirements-to-freeze.txt"
+    sudo pip3 install -r "$(pwd)/qubinode-installer/lib/requirements-to-freeze.txt"
     ansible-galaxy install -r "$(pwd)/playbooks/requirements.yml" --force
 }
 

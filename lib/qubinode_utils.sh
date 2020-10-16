@@ -12,5 +12,3 @@ function set_ansible_config_env(){
     sed -i "s|vault_password_file  = ~/.vaultkey|vault_password_file  = $HOME/.vaultkey|g" ansible.cfg
 }
 
-
-cd
