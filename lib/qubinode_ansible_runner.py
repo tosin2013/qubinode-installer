@@ -44,7 +44,13 @@ def run_playbook(data_path, playbook_path, extra_vars, verbose, destroy):
     print("error code: "+str(r.rc))
     if r.rc == 2:
       sys.exit(1)
-  
+
+def clean_envvars():
+  filePath = '/home/cloud_user/qubinode-installer/env/extravars'
+  if os.path.exists(filePath):
+      os.remove(filePath)
+  else:
+      print("Can not delete the file as it doesn't exists")
 
 def main():
   # Creating the parser
@@ -77,6 +83,7 @@ def main():
   print("PATH "+str(cwd))
   print ("File exists:"+str(path.exists(cwd+'/playbooks/'+playbookname)))
   run_playbook(cwd, playbookname, args.extravars, args.verbose, args.destroy)
+  clean_envvars()
 
 if __name__== "__main__":
    main()

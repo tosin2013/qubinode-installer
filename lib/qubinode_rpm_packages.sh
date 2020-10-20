@@ -43,6 +43,7 @@ function configure_rhel7_subscriptions(){
 function install_requirements(){
     sudo pip3 install -r "${HOME}/qubinode-installer/lib/requirements-to-freeze.txt"
     ansible-galaxy install -r "${HOME}/qubinode-installer/playbooks/requirements.yml" --force
+    ansible-galaxy install kwoodson.yedit
 }
 
 function configure_vault_key(){

@@ -54,6 +54,7 @@ function configure_ansible_runner_systemd(){
     if [ ! -f /usr/share/ansible-runner-service ];
     then
       mkdir -p /home/"${USER}"/qubinode-installer/env
+      mkdir -p /home/"${USER}"/qubinode-installer/playbooks/host_vars
       ln -s /home/"${USER}"/qubinode-installer/playbooks  /home/"${USER}"/qubinode-installer/project 
       sudo ln -s  /home/"${USER}"/qubinode-installer/playbooks /etc/ansible-runner-service/project
       sudo touch /etc/ansible-runner-service/ansible-runner-service.log
@@ -65,6 +66,6 @@ function configure_ansible_runner_systemd(){
       sudo systemctl enable ansible-runner-service.service
       sudo systemctl start ansible-runner-service.service
       #sudo systemctl status ansible-runner-service.service
-      sed -i 's/cloud_user/admin/g' lib/qubinode_ansible_runner.py
+      sed -i 's/cloud_user/admin/g' lib/qubinode_ansible_runner.py 
     fi
 }
