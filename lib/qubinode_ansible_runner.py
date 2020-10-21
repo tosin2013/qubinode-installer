@@ -82,6 +82,7 @@ def main():
   cwd = os.getcwd()
   print("PATH "+str(cwd))
   print ("File exists:"+str(path.exists(cwd+'/playbooks/'+playbookname)))
+  clean_envvars()
   run_playbook(cwd, playbookname, args.extravars, args.verbose, args.destroy)
   clean_envvars()
 
