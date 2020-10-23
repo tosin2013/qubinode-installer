@@ -10,7 +10,14 @@ function generate_sshkey(){
 # setting ansible config enviornment for ansible runner 
 function set_ansible_config_env(){
     export ANSIBLE_CONFIG="${HOME}/qubinode-installer/ansible.cfg"
-    echo 'export ANSIBLE_CONFIG="'"${HOME}"'/qubinode-installer/ansible.cfg"' >> ${HOME}/.bashrc
-    sed -i "s|vault_password_file  = ~/.vaultkey|vault_password_file  = $HOME/.vaultkey|g" ansible.cfg
+    if grep -Fxq "$FILENAME" my_list.txt
+    then
+        ${HOME}/.bashrc
+    else
+        echo 'export ANSIBLE_CONFIG="'"${HOME}"'/qubinode-installer/ansible.cfg"' >> ${HOME}/.bashrc
+        source ${HOME}/.bashrc
+    fi
+
+    sed -i "s|vault_password_file  = ~/.vaultkey|vault_password_file  = $HOME/.vaultkey|g" ${HOME}/qubinode-installer/ansible.cfg
 }
 
