@@ -10,7 +10,7 @@ function generate_sshkey(){
 # setting ansible config enviornment for ansible runner 
 function set_ansible_config_env(){
     export ANSIBLE_CONFIG="${HOME}/qubinode-installer/ansible.cfg"
-    if grep -Fxq "$FILENAME" my_list.txt
+    if grep -Fxq "ANSIBLE_CONFIG" ${HOME}/.bashrc
     then
         ${HOME}/.bashrc
     else
