@@ -12,7 +12,7 @@ function set_ansible_config_env(){
     export ANSIBLE_CONFIG="${HOME}/qubinode-installer/ansible.cfg"
     if grep -Fxq "ANSIBLE_CONFIG" ${HOME}/.bashrc
     then
-        ${HOME}/.bashrc
+        source ${HOME}/.bashrc
     else
         echo 'export ANSIBLE_CONFIG="'"${HOME}"'/qubinode-installer/ansible.cfg"' >> ${HOME}/.bashrc
         source ${HOME}/.bashrc
