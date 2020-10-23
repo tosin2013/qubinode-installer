@@ -3,6 +3,7 @@
 
 function generate_sshkey(){
    ssh-keygen -f "${HOME}/.ssh/id_rsa" -q -N '' 
+   sudo mkdir -p /root/.ssh/
    sudo ln -s ~/.ssh/id_rsa  /root/.ssh/
 }
 

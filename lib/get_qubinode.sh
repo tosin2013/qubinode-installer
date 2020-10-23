@@ -96,6 +96,8 @@ function remove_qubinode_folder(){
     then
       sudo rm -rf ${HOME}/.ssh/id_rsa 
       sudo rm -rf ${HOME}/.ssh/id_rsa.pub
+      sudo rm -rf  /root/.ssh/id_rsa
+      sudo rm -rf /root/.ssh/id_rsa.pub
     fi  
 
 }
