@@ -6,6 +6,8 @@ function configure_rhel8_packages(){
 
 function configure_centos8_packages(){
     sudo dnf clean all > /dev/null 2>&1
+    sudo dnf install epel-release -y
+    sudo dnf makecache
     sudo dnf install -y -q -e 0  python3-pip ansible git vim  python3-devel gcc
     sudo dnf -y module disable container-tools
     sudo dnf -y install 'dnf-command(copr)'
