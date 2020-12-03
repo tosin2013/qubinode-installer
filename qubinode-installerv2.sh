@@ -33,8 +33,8 @@ function main(){
     if [ -f /etc/redhat-release ];
     then
         echo "Checking Red Hat Release Type"
-        if cat /etc/redhat-release  | grep -E  '\CentOS Linux release\> 8.[0-9].[0-9]{4}'  > /dev/null 2>&1; then
-            printf "%s\n" "${grn} $(cat /etc/redhat-release) detected. Configuring system for qubinode installer${end}"
+        if cat /etc/redhat-release  | grep -E  '\Red Hat Enterprise Linux release\> 8.[0-9]'  > /dev/null 2>&1; then
+            printf "%s\n" "${grn} $(cat /etc/redhat-release) detected. Configursing system for qubinode installer${end}"
             check_rhsm_status
             configure_rhel8_subscriptions
             configure_rhel8_packages
