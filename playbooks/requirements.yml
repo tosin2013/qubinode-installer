@@ -1,18 +1,10 @@
 ---
-<<<<<<< HEAD
-- src: https://github.com/Qubinode/deploy-kvm-vm.git
-  version: v2.4.2
-
-- src: https://github.com/Qubinode/qubinode_kvmhost_setup.git
-  version: v2.4.2
-=======
 roles:
   - src: https://github.com/Qubinode/deploy-kvm-vm.git
     version: python-build
 
   - src: https://github.com/Qubinode/qubinode_kvmhost_setup.git
     version: v2.4.2
->>>>>>> ba9bd8d22ad5fc61633c343251b8607bfea69c0e
 
   - src: https://github.com/flyemsafe/ansible-idm.git
     version: v1.0.0
@@ -50,13 +42,6 @@ roles:
   - src: https://github.com/Qubinode/nfs-provisioner-role.git
     version: v2.4.1
 
-<<<<<<< HEAD
-- src: https://github.com/Qubinode/ocp4_kvm_deployer.git
-  version: v2.4.3
-
-- src: https://github.com/Qubinode/ocp4-bootstrap-webserver.git
-  version: v2.4.3
-=======
   - src: https://github.com/Qubinode/ocp4_kvm_deployer.git
     version: v2.4.2
 
@@ -70,4 +55,3 @@ collections:
     - containers.podman
     - community.general
     - community.libvirt
->>>>>>> ba9bd8d22ad5fc61633c343251b8607bfea69c0e

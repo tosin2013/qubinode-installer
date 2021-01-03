@@ -31,23 +31,15 @@ If you choose **Server with GUI**, make sure from the **Add-ons for Selected Evi
 
 ```shell=
 cd $HOME
-<<<<<<< HEAD
-wget https://github.com/Qubinode/qubinode-installer/archive/master.zip
-unzip master.zip
-rm master.zip
-mv qubinode-installer-master qubinode-installer
-=======
 curl -OL https://raw.githubusercontent.com/tosin2013/qubinode-installer/release-2.4.3/lib/get_qubinode.sh
 chmod +x get_qubinode.sh
 # review code 
 vim get_qubinode.sh
 ./get_qubinode.sh
->>>>>>> ba9bd8d22ad5fc61633c343251b8607bfea69c0e
 ```
 
 ### Qubinode Setup
 
-<<<<<<< HEAD
 The below commands ensure your system is setup as a KVM host.
 The qubinode-installer needs to run as a regular user.
 
@@ -65,8 +57,6 @@ cd ~/qubinode-installer
 ./qubinode-installer -m ansible
 ./qubinode-installer -m host
 ```
-=======
->>>>>>> ba9bd8d22ad5fc61633c343251b8607bfea69c0e
 
 At this point you should be able to acces the RHEL system via the cockpit web interface on:
 ```

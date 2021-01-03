@@ -87,7 +87,6 @@ function check_rhsm_status () {
         echo "Testing"
     }
     
-<<<<<<< HEAD
 function get_rhsm_user_and_pass () {
     if grep '""' "${vault_vars_file}"|grep -q rhsm_username
     then
@@ -126,10 +125,4 @@ function get_subscription_pool_id () {
         exit 1
     fi
 }
-=======
-}
-
-
-
->>>>>>> ba9bd8d22ad5fc61633c343251b8607bfea69c0e
 

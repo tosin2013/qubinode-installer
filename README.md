@@ -33,17 +33,10 @@ The required base OS is Red Hat Enterprise Linux 7.8 refer to the [Getting Start
 
 New Features |
 -- |
-<<<<<<< HEAD
 IDM Server Fixes|
 OpenShift 4.6 Deployment by default |
 Bridge network Deployment Option |
 Local Storage Deployment Recommended Option |
-=======
-NFS Server fixes |
-NFS Server is installed by default |
-Developer Account Fixes |
-
->>>>>>> ba9bd8d22ad5fc61633c343251b8607bfea69c0e
 
 See [Release Document](docs/qubinode/releases.md) for features history.
 
