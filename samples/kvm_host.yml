@@ -41,6 +41,11 @@ host_device: "{{ kvm_host_libvirt_extra_disk | default('nvme0n1') }}"
 vg_name: vg_qubi
 vm_libvirt_net_check: yes
 
+
+## Set to yes to restore host to prior state, removing bridge network
+restore_system: no
+
+
 # should a bridge interface be created
 configure_bridge: true
 
@@ -69,6 +74,7 @@ vm_libvirt_net: "qubinet"
 
 libvirt_network_name: "qubinat"
 
+<<<<<<< HEAD
 libvirt_host_networks:
   - name: "{{ vm_libvirt_net }}"
     create: true
@@ -84,4 +90,20 @@ libvirt_host_networks:
     subnet: "not currently in use"
     mac: "{{ kvm_host_macaddr }}"
     mtu: 1500
+=======
+>>>>>>> ba9bd8d22ad5fc61633c343251b8607bfea69c0e
 
+## Hash for bridge network
+qubinode_bridge_network:
+  - name: "{{ libvirt_bridge_name }}"
+    create_bridge: "{{ configure_bridge }}"
+    fwd_type: bridge
+    bridge_device: "{{ qubinode_bridge_device }}"
+    ifname: "{{ kvm_host_interface }}"
+    ipaddress: "{{ kvm_host_ip }}/{{ kvm_host_mask_prefix }}"
+    gateway: "{{ kvm_host_gw }}"
+    mtu: "{{ kvm_host_mtu }}"
+    bridge_slave_dev: "{{ kvm_host_interface }}"
+    auto_routes: "{{ kvm_host_auto_routes }}"
+    auto_dns: "{{ kvm_host_auto_dns }}"
+    ipv6: "{{ kvm_host_ipv6_method }}"

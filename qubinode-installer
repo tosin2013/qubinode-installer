@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -E
 set -o functrace
+set -o errexit
+set -o pipefail
+set -o nounset
+#set -o xtrace
 
 # Define colours
 red=$'\e[1;31m'
@@ -27,7 +31,7 @@ width=50
 
 
 # Uncomment for debugging
-#export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+#c
 #set -x
 
 # Turn verbose off
@@ -73,15 +77,16 @@ rhel_major=$(sed -rn 's/.*([0-9])\.[0-9].*/\1/p' /etc/redhat-release)
 . "${project_dir}/lib/setup_sudo.sh"
 . "${project_dir}/lib/qubinode_userinput.sh"
 . "${project_dir}/lib/qubinode_kvmhost.sh"
+. "${project_dir}/lib/qubinode_rhsm.sh"
 . "${project_dir}/lib/qubinode_requirements.sh"
 . "${project_dir}/lib/qubinode_idm.sh"
 . "${project_dir}/lib/qubinode_ansible.sh"
-. "${project_dir}/lib/qubinode_rhsm.sh"
 . "${project_dir}/lib/qubinode_ocp4_utils.sh"
 . "${project_dir}/lib/qubinode_ocp4.sh"
 . "${project_dir}/lib/qubinode_satellite.sh"
 . "${project_dir}/lib/qubinode_tower.sh"
 . "${project_dir}/lib/qubinode_rhel.sh"
+
 
 
 # Exit if this is executed as the root user
@@ -95,6 +100,7 @@ echo ""
 OPTIND=1
 NUM_ARGS="$#"
 ALL_ARGS="$@"
+qubinode_maintenance=false
 
 while getopts ":c:dvhm:p:a:" opt;
 do
@@ -143,21 +149,21 @@ shift "$((OPTIND-1))"
 if (( $OPTIND == 1 ))
 then
     display_openshift_msg_ocp4
-elif [ "A${qubinode_product}" == "Atrue" ] && [ "A${qubinode_maintenance}" == "Atrue" ]
+elif [ "A${qubinode_product-skip}" == "Atrue" ] && [ "A${qubinode_maintenance}" == "Atrue" ]
 then
     product_maintenance="${qubinode_maintenance_opt}"
-    qubinode_product_deployment $qubinode_product_opt
+    qubinode_product_deployment "${qubinode_product_opt}"
 elif [ "A${qubinode_maintenance}" == "Atrue" ]
 then
     ## run a product maintenace option
     qubinode_maintenance_options
-elif [ "A${qubinode_product}" == "Atrue" ]
+elif [ "A${qubinode_product-skip}" == "Atrue" ]
 then
     ## Deploys a product ##
 
     # Check if qubinode setup was executed
     kvmhost_vars="${project_dir}/playbooks/vars/kvm_host.yml"
-    if [ -f ${kvmhost_vars} ]
+    if [ -f "${kvmhost_vars}" ]
     then
         IS_QUBINODE_SETUP=$(awk '/^qubinode_installer_host_completed:/ {print $2}' "${kvmhost_vars}")
     else
@@ -170,7 +176,7 @@ then
         printf "%s\n" " You must run './qubinode_installer -m setup' before you can deploy a product. "
         exit 1
     fi
-    qubinode_product_deployment $qubinode_product_opt
+    qubinode_product_deployment "${qubinode_product_opt}"
 else
     display_help
 fi

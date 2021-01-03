@@ -10,9 +10,8 @@
     - vars/ocp4.yml
   vars:
     dn_attribute: []
-    homedir: "{{ lookup('env','HOME') }}"
     bind_user_pass: "{{ lookup('password', '/dev/null length=15 chars=ascii_letters') }}"
-    vault_pass_file: "{{ homedir }}/.vaultkey"
+    vault_pass_file: "{{ ansible_env.HOME }}/.vaultkey"
     vault_file: "{{ project_dir }}/playbooks/vars/vault.yml"
 
   environment:

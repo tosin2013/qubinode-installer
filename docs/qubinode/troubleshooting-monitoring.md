@@ -8,19 +8,19 @@ While OpenShift is deploying you can open a new terminal sshh into your box and 
 When Bootstrap is starting 
 ```
 # OpenShift 
-tail -f /home/${USER}/qubinode-installer/ocp4/bootstrap-complete.log
+tail -f ${HOME}/qubinode-installer/ocp4/bootstrap-complete.log
 
 # OKD 
-tail -f /home/${USER}/qubinode-installer/okd/bootstrap-complete.log
+tail -f ${HOME}/qubinode-installer/okd/bootstrap-complete.log
 ```
 
 Waiting for Installation to Complete
 ```
 # OpenShift 
-tail -f /home/${USER}/qubinode-installer/ocp4/.openshift_install.log
+tail -f ${HOME}/qubinode-installer/ocp4/.openshift_install.log
 
 # OKD 
-tail -f /home/${USER}/qubinode-installer/okd4/.openshift_install.log
+tail -f ${HOME}/qubinode-installer/okd4/.openshift_install.log
 ```
 
 **To exit out of tail hit CTRL+C**

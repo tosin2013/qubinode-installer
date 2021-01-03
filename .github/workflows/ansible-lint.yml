@@ -9,7 +9,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.6.10]
+        python-version: [3.8.5]
         ansible-version: [2.9.10]
         lint-version: [4.1.0]
 
@@ -19,6 +19,18 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Install shellcheck
+      run: |
+        sudo apt-get install shellcheck
+    - name: Testing all files in lib against shellcheck
+      run: |
+        #!/bin/bash
+        FILES=lib/*.sh
+        for f in $FILES
+        do
+          echo "shellcheck $f file..."
+          shellcheck $f
+        done
     - name: Install Ansible ${{ matrix.ansible-version }}
       run: |
         python -m pip install --upgrade pip

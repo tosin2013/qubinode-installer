@@ -1,48 +1,73 @@
 ---
+<<<<<<< HEAD
 - src: https://github.com/Qubinode/deploy-kvm-vm.git
   version: v2.4.2
 
 - src: https://github.com/Qubinode/qubinode_kvmhost_setup.git
   version: v2.4.2
+=======
+roles:
+  - src: https://github.com/Qubinode/deploy-kvm-vm.git
+    version: python-build
 
-- src: https://github.com/flyemsafe/ansible-idm.git
-  version: v1.0.0
+  - src: https://github.com/Qubinode/qubinode_kvmhost_setup.git
+    version: v2.4.2
+>>>>>>> ba9bd8d22ad5fc61633c343251b8607bfea69c0e
 
-- src: https://github.com/Qubinode/swygue-redhat-subscription.git
-  version: v2.4.2
+  - src: https://github.com/flyemsafe/ansible-idm.git
+    version: v1.0.0
 
-- src: https://github.com/flyemsafe/swygue-lvm.git
-  version: v1.0.1
+  - src: https://github.com/Qubinode/swygue-redhat-subscription.git
+    version: v2.4.2
 
-- src: https://github.com/ahuffman/ansible-resolv.git
-  version: 1.3.2
+  - src: https://github.com/flyemsafe/swygue-lvm.git
+    version: v1.0.1
 
-- src: https://github.com/amalivert/edge_hosts_validate.git
-  version: master
+  - src: https://github.com/ahuffman/ansible-resolv.git
+    version: 1.3.2
 
-- src: https://github.com/tosin2013/ocp-power-management.git
-  version: master
+  - src: https://github.com/amalivert/edge_hosts_validate.git
+    version: master
 
-- src: https://github.com/flyemsafe/swygue-install-satellite.git
-  version: master
+  - src: https://github.com/tosin2013/ocp-power-management.git
+    version: master
 
-- src: https://github.com/Qubinode/openshift-4-loadbalancer.git
-  version: v2.4.0
+  - src: https://github.com/flyemsafe/swygue-install-satellite.git
+    version: master
 
-- src: https://github.com/Qubinode/swygue.coreos-virt-install-iso.git
-  version: master
+  - src: https://github.com/Qubinode/openshift-4-loadbalancer.git
+    version: v2.4.0
 
-- src: https://github.com/flyemsafe/redhat-satellite-quickstart.git
-  version: master
+  - src: https://github.com/Qubinode/swygue.coreos-virt-install-iso.git
+    version: master
 
-- src: https://github.com/flyemsafe/swygue.ansible-tower.git
-  version: master
+  - src: https://github.com/flyemsafe/redhat-satellite-quickstart.git
+    version: master
 
-- src: https://github.com/Qubinode/nfs-provisioner-role.git
-  version: v2.4.1
+  - src: https://github.com/flyemsafe/swygue.ansible-tower.git
+    version: master
 
+  - src: https://github.com/Qubinode/nfs-provisioner-role.git
+    version: v2.4.1
+
+<<<<<<< HEAD
 - src: https://github.com/Qubinode/ocp4_kvm_deployer.git
   version: v2.4.3
 
 - src: https://github.com/Qubinode/ocp4-bootstrap-webserver.git
   version: v2.4.3
+=======
+  - src: https://github.com/Qubinode/ocp4_kvm_deployer.git
+    version: v2.4.2
+
+  - src: https://github.com/Qubinode/ocp4-bootstrap-webserver.git
+    version: v2.4.0
+
+  - src: https://github.com/tosin2013/qubinode-config-manager.git
+    version: master
+collections:
+  - name: 
+    - containers.podman
+    - community.general
+    - community.libvirt
+>>>>>>> ba9bd8d22ad5fc61633c343251b8607bfea69c0e
