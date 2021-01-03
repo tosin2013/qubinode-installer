@@ -8,7 +8,7 @@
 # The qubinode-installer depends on IdM as the DNS server.
 # If there is an existing Idm, then set this to no.
 deploy_idm_server: yes
-ask_use_existing_idm: no
+ask_use_existing_idm: yes
 idm_server_name: dns01
 idm_check_static_ip: ""
 idm_admin_user: admin
@@ -23,7 +23,8 @@ idm_reverse_zones:
 rhel_major: "8"
 qcow_rhel_release: "{{ rhel_major }}"
 rhel_release: "{{ rhel_major }}"
-cloud_init_vm_image: rhel-8.2-x86_64-kvm.qcow2
+vm_qcow_image: rhel-8.2-x86_64-kvm.qcow2
+os_release: rhl8.0
 idm_server_ip: ""
 idm_public_ip: ""
 idm_zone_overlap: false
@@ -32,7 +33,7 @@ dns_server_vm:
     dns_name: "{{ idm_hostname }}"
     dns_vcpu: 2
     dns_memory: 2048
-    dns_root_disk_size: 10G
+    dns_root_disk_size: 20G
     dns_teardown: false
     dns_recreate: false
     dns_group: ipaserver
@@ -42,9 +43,9 @@ dns_server_vm:
     dns_mask: "{{ vm_net_netmask | default('', true) }}"
     dns_gateway: "{{ vm_net_gateway | default('', true) }}"
     dns_mask_prefix: "{{ kvm_host_mask_prefix | default(kvm_host_mask_prefix) }}"
-    dns_expand_os_disk: no
+    dns_expand_os_disk: yes
 # should qcow template be expanded
-expand_os_disk: no
+expand_os_disk: yes
 
 #######################
 # IdM on RHEL 8 attributes
