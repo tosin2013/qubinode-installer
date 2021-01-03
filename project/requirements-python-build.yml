@@ -50,3 +50,11 @@
 - src: linux-system-roles.cockpit
 
 - src: linux-system-roles.firewall
+
+- src: https://github.com/tosin2013/qubinode-config-manager.git
+  version: dev
+collections:
+  - name: 
+    - containers.podman
+    - community.general
+    - community.libvirt

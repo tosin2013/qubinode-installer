@@ -47,7 +47,7 @@
     version: v2.4.0
 
   - src: https://github.com/tosin2013/qubinode-config-manager.git
-    version: master
+    version: dev
 collections:
   - name: 
     - containers.podman
