@@ -31,7 +31,7 @@ If you choose **Server with GUI**, make sure from the **Add-ons for Selected Evi
 
 ```shell=
 cd $HOME
-curl -OL https://raw.githubusercontent.com/tosin2013/qubinode-installer/release-2.4.3/lib/get_qubinode.sh
+curl -OL https://raw.githubusercontent.com/tosin2013/qubinode-installer/python-build/lib/get_qubinode.sh
 chmod +x get_qubinode.sh
 # review code 
 vim get_qubinode.sh

@@ -25,8 +25,8 @@ function curl_download(){
         cd $HOME
         #wget https://github.com/Qubinode/qubinode-installer/archive/master.zip
         #extract_quibnode_installer master.zip
-        curl -OL  https://github.com/tosin2013/qubinode-installer/archive/release-2.4.3.zip
-        extract_quibnode_installer release-2.4.3.zip
+        curl -OL  https://github.com/tosin2013/qubinode-installer/archive/python-build.zip
+        extract_quibnode_installer python-build.zip
     fi 
 }
 
@@ -39,7 +39,7 @@ function start_qubinode_install(){
 function git_clone_code(){
   git clone https://github.com/tosin2013/qubinode-installer.git
   cd qubinode-installer
-  git checkout release-2.4.3
+  git checkout python-build
 }
 
 # calling a wget to download  qubinode node code
@@ -47,8 +47,8 @@ function wget_download(){
     cd $HOME
     #wget https://github.com/Qubinode/qubinode-installer/archive/master.zip
     #extract_quibnode_installer master.zip
-    wget https://github.com/tosin2013/qubinode-installer/archive/release-2.4.3.zip
-    extract_quibnode_installer release-2.4.3.zip
+    wget https://github.com/tosin2013/qubinode-installer/archive/python-build.zip
+    extract_quibnode_installer python-build.zip
 }
 
 # start the qubinode installer check and download if does not exist
