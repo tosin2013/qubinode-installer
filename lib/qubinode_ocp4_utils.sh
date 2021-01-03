@@ -268,15 +268,19 @@ function set_local_volume_type () {
 }
 
 function ask_to_use_external_bridge () {
-    echo "Would you like to deploy your OpenShift Nodes on to an external Bridge Network?"
-    echo "The Default deployment Option is No this will deploy your OpenShift Nodes on the NAT Network?"
-    echo "Default choice is to choose: No"
-    confirm " Yes/No"
-    if [ "A${response}" == "Ayes" ]
+    ocp_libvirt_network_option=$(awk '/^use_external_bridge:/ {print $2; exit}' "${ocp_vars_file}")
+    if [ "A${ocp_libvirt_network_option}" == "A" ]
     then
-        sed -i "s/use_external_bridge:.*/use_external_bridge: true/g" ${ocp_vars_file}
-    else
-        sed -i "s/use_external_bridge:.*/use_external_bridge: false/g" ${ocp_vars_file}
+        echo "Would you like to deploy your OpenShift Nodes on to an external Bridge Network?"
+        echo "The Default deployment Option is No this will deploy your OpenShift Nodes on the NAT Network?"
+        echo "Default choice is to choose: No"
+        confirm " Yes/No"
+        if [ "A${response}" == "Ayes" ]
+        then
+            sed -i "s/use_external_bridge:.*/use_external_bridge: true/g" ${ocp_vars_file}
+        else
+            sed -i "s/use_external_bridge:.*/use_external_bridge: false/g" ${ocp_vars_file}
+        fi
     fi
 }
 
@@ -1051,10 +1055,20 @@ openshift4_server_maintenance () {
             printf "%s\n\n" ""
             printf "%s\n" "    ${yel}Starting up ${product_opt} Cluster!${end}"
             ansible-playbook ${deploy_product_playbook} -t startup -e startup_cluster=yes || exit 1
-            /usr/local/bin/qubinode-ocp4-status
+            if [ -f /usr/local/bin/qubinode-ocp4-status ]
+            then
+                /usr/local/bin/qubinode-ocp4-status
+            else
+                echo "/usr/local/bin/qubinode-ocp4-status not found"
+            fi
             ;;
        status)
-            /usr/local/bin/qubinode-ocp4-status
+            if [ -f /usr/local/bin/qubinode-ocp4-status ]
+            then
+                /usr/local/bin/qubinode-ocp4-status
+            else
+                echo "/usr/local/bin/qubinode-ocp4-status not found"
+            fi
             ;;
        remove-compute)
            remove_ocp4_compute
