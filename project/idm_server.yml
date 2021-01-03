@@ -23,7 +23,7 @@
       ignore_errors: yes
       tags: [always]
 
-    - name: create the fact idm_is_installed
+    - name: Set idm_is_installed fact
       set_fact:
         idm_is_installed: "{{ False if idm_is_installed.failed | default(False) or idm_is_installed.status != 200 else True }}"
       tags: [always]
@@ -84,29 +84,17 @@
             - ipaserver
           delegate_to: 127.0.0.1
 
-        - name: Install IDM server on rhel 8
-          include_role:
-            name: ipaserver
-          vars:
-            - ipaserver_domain: "{{ domain }}"
-            - idm_realm: "{{ domain | upper }}"
-            - ipaserver_realm: "{{ idm_realm }}"
-            - ipaserver_setup_dns: "yes"
-            - ipaserver_no_host_dns: yes
-            - ipaserver_setup_kra: yes
-            - ipaserver_forwarders:
-              - "{{ dns_forwarder }}"
-            - ipaserver_reverse_zones: "{{ idm_reverse_zones }}"
-            - ipaadmin_password: "{{ idm_admin_password }}"
-            - ipadm_password: "{{ idm_dm_pwd }}"
-          tags: [install,preinstall,installer,firewall,always,result]
+    - name: exit if idm installed failed
+      set_fact:
+        idm_is_installed: "{{ False if idm_is_installed.failed | default(False) or idm_is_installed.status != 200 else True }}"
+      tags: [always]
 
-    ###############################################################
-    - name: deploy idm on RHEL 7
-      when:
-        - not idm_is_installed or force_idm_redeployment
-        - (ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] == '7')
-      block:
+    - name: fail if IDM server is not installed
+      fail:
+        msg: |
+          The IDM server does not appear to have been installed.
+          Please re-run qubinode-installer or undeploy and start again.
+      when: not idm_is_installed|bool
 
         - name: update system
           command: yum update -y
@@ -165,36 +153,14 @@
       when: not force_idm_redeployment|bool and not vm_teardown|bool
       delegate_to: 127.0.0.1
 
-    - name: post IDM server install check if IDM is answering
-      vars:
-        vm_name: "{{ dns_server_vm.dns_name }}"
-      uri:
-        url: "https://{{ vm_name  }}.{{ domain }}/ipa/ui"
-        user: "{{ idm_admin_user }}"
-        password: "{{ idm_admin_password }}"
-        force_basic_auth: yes
-      register: idm_is_installed
-      ignore_errors: yes
-      tags: [always]
-
-    - name: set idm_is_installed fact
-      set_fact:
-        idm_is_installed: "{{ False if idm_is_installed.failed | default(False) or idm_is_installed.status != 200 else True }}"
-      tags: [always]
-    
-    - name: Undo resolv.conf file change 
+    - name: Restore original /etc/resolv.conf file
       vars:
         ansible_python_interpreter: /usr/bin/python3
       copy:
         src: "{{ project_dir }}/backups/resolv.conf"
         dest: /etc/resolv.conf
         follow: yes
-      when: not idm_is_installed|bool   
+      when: vm_teardown|bool and not resolv_backup.stat.exists and not idm_is_installed|bool
       delegate_to: 127.0.0.1
-      
-    - name: fail playbook if IdM server is not installed
-      fail:
-        msg: |
-          The IDM server does not appear to have been installed.
-          Please re-run qubinode-installer or undeploy and start again.
-      when: not idm_is_installed|bool
+
+

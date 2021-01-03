@@ -1,0 +1,23 @@
+---
+cloud_init_vm_image_url: "{{ cloud_init_vm_image_url }}"
+cloud_init_vm_image: "{{ cloud_init_vm_image }}"
+cloud_init_checksum: "{{ cloud_init_checksum }}" 
+os_variant: {{ os_variant }}
+vm_teardown: {{ vm_teardown }}
+expand_os_disk: {{ expand_os_disk }}
+generic_hash: null
+generic_release: {{ generic_release }}
+generic_server_vm:
+  generic_enable: true
+  generic_extra_storage:
+  - enable: false
+    size: ''
+  generic_group: generic
+  generic_memory: {{ generic_memory }}
+  generic_name:  {{ generic_name }}
+  generic_recreate:  {{ generic_recreate }}
+  generic_root_disk_size:  {{ generic_root_disk_size }}
+  generic_teardown:  {{ vm_teardown }}
+  generic_vcpu:  {{ generic_vcpu }}
+update_etc_resolv:  {{ update_etc_resolv }}
+vm_root_disk_size: '{{ generic_server_vm.generic_root_disk_size }}'

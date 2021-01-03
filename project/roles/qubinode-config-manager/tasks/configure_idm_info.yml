@@ -1,0 +1,7 @@
+- name: Copying over idm_dns this will be used to for the idm dns server variables
+  template:
+    src: templates/idm_dns.yml.j2
+    dest:  /{{ vm_inventory_dir }}/idm_dns.yml
+    owner: admin
+    group: admin
+    mode: 0666

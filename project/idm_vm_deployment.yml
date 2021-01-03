@@ -2,7 +2,8 @@
 - name: Deploy IDM VM
   hosts: localhost
   gather_facts: yes
-  become: yes
+  roles:
+  - kwoodson.yedit
   vars_files:
     - ../inventory/rhel8_host_vars
     - ../inventory/kvm_host.yml
@@ -34,13 +35,14 @@
 
     - name: update idm_public_ip with current IDM server IP
       lineinfile:
-        dest: "{{ project_dir }}/playbooks/vars/idm.yml"
+        dest: "{{ project_dir }}project/host_vars/idm_dns.yml"
         regexp: '^idm_server_ip:'
         line: "idm_server_ip: {{ current_vm_ip }}"
         state: present
       when: not vm_teardown|bool
 
-    - set_fact:
+    - name: setting fact for idm vm teardown
+      set_fact:
         etc_host_status: "{{ 'absent' if vm_teardown|bool else 'present' }}"
 
     - name: Add/Remove DNS server from inventory into /etc/hosts
@@ -52,4 +54,5 @@
         state: "{{ etc_host_status }}"
       when: hostvars[item]['ansible_host'] is defined and hostvars[item]['inventory_hostname_short'] == vm_name
       with_items:
-        - "{{ groups['ipaserver'] }}"
+        - "{{ groups['qbn-dns01'] }}"
+

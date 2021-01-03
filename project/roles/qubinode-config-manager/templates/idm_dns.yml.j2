@@ -1,0 +1,41 @@
+---
+ask_use_existing_idm: 'yes'
+vm_teardown: false 
+deploy_idm_server: 'yes'
+dns_server_vm:
+  dns_enable: true
+  dns_expand_os_disk: 'no'
+  dns_extra_storage: []
+  dns_gateway: '{{ vm_net_gateway | default('''', true) }}'
+  dns_group: dns
+  dns_ip: '{{ idm_server_ip | default('''', true) }}'
+  dns_mask: '{{ vm_net_netmask | default('''', true) }}'
+  dns_mask_prefix: '{{ kvm_host_mask_prefix | default(kvm_host_mask_prefix) }}'
+  dns_memory: 2048
+  dns_name: '{{ idm_hostname }}'
+  dns_recreate: false
+  dns_root_disk_size: 10G
+  dns_teardown: '{{ vm_teardown }}'
+  dns_vcpu: 2
+expand_os_disk: 'no'
+idm_admin_user: "{{ idm_admin_user }}"
+idm_check_static_ip: ''
+idm_forward_ip: '{{ dns_forwarder }}'
+idm_hostname: '{{ idm_hostname }}'
+idm_packages:
+  - ipa-server
+  - ipa-server-dns
+idm_public_ip: ''
+idm_realm: '{{ domain | upper }}'
+idm_repos:
+  - rhel-7-server-rpms
+  - rhel-7-server-extras-rpms
+  - rhel-7-server-optional-rpms
+idm_reverse_zones:
+  - {{ kvm_host_ip.split('.')[2] }}.{{ kvm_host_ip.split('.')[1] }}.{{ kvm_host_ip.split('.')[0]}}.in-addr.arpa.
+  - {{ '192.168.50' | ipaddr('revdns')}}
+idm_server_ip: ""
+idm_zone_overlap: false
+ipa_host: '{{ idm_hostname }}.{{ domain }}'
+qcow_rhel_release: 7
+rhel_release: 7

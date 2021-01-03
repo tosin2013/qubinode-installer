@@ -1,0 +1,20 @@
+---
+cloud_init_vm_image: "{{ cloud_init_vm_image }}"
+vm_teardown: {{ vm_teardown }}
+expand_os_disk: {{ expand_os_disk }}
+rhel_7_hash: null
+rhel_8_hash: null
+rhel_release: {{ rhel_release }}
+rhel_server_vm:
+  rhel_enable: true
+  rhel_extra_storage:
+  - enable: false
+    size: ''
+  rhel_group: rhel
+  rhel_memory: {{ rhel_memory }}
+  rhel_name: {{ rhel_name }}
+  rhel_recreate: {{ vm_recreate }}
+  rhel_root_disk_size: {{ rhel_root_disk_size }}
+  rhel_vcpu:  {{ rhel_vcpu }}
+update_etc_resolv: {{ update_etc_resolv }}
+vm_root_disk_size: '{{ rhel_server_vm.rhel_root_disk_size }}'

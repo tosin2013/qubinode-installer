@@ -1,0 +1,7 @@
+- name: Copying over generic_vm this will be used to configure your generic vm variables
+  template:
+    src: templates/generic_vm.yml.j2
+    dest:  "/{{ vm_inventory_dir }}/{{ generic_name }}.yml"
+    owner: admin
+    group: admin
+    mode: 0666

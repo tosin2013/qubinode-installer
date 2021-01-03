@@ -1,11 +1,10 @@
 ---
-kvm_host_gw: ""
-kvm_host_interface: ""
-kvm_host_ip: ""
-kvm_host_macaddr: ""
-kvm_host_mask_prefix: ""
-kvm_host_netmask: ""
-kvm_host_mtu: 1500
+kvm_host_gw: "{{ kvm_host_gw }}"
+kvm_host_interface: "{{ kvm_host_interface }}"
+kvm_host_ip: "{{ kvm_host_ip }}"
+kvm_host_macaddr: "{{ kvm_host_macaddr }}"
+kvm_host_mask_prefix: "{{ kvm_host_mask_prefix }}"
+kvm_host_netmask: "{{ kvm_host_netmask }}"
 libvirt_pool_name_check: yes
 skip_libvirt_pool: no
 
@@ -16,7 +15,7 @@ qubinode_bridge_name: qubibr0
 
 # RHEL 7.8 is the current tested RHEL 7 minor release.
 # RHEL 8.3  is the current tested RHEL 8 minor release.
-rhel_release: ""
+rhel_release: {{ hostvars[inventory_hostname].ansible_distribution_version }}
 
 # This variable is being phased out
 run_qubinode_setup: yes
@@ -37,7 +36,7 @@ configure_shell: no
 
 # set path to libvirt images
 kvm_host_libvirt_dir: /var/lib/libvirt/images
-host_device: "{{ kvm_host_libvirt_extra_disk | default('nvme0n1') }}"
+host_device: "{{ libvirt_dev }}"
 vg_name: vg_qubi
 vm_libvirt_net_check: yes
 
@@ -52,13 +51,13 @@ configure_bridge: true
 # Set to no prevent the installer from attempting
 # setup a LVM group for qubinode. Also set this to no
 # if you already have you storage for lvm setup
-create_lvm: yes
+create_lvm: "{{ create_lvm }}"
 
 # used in playbook setup_kvmhost.yml
 network_interface_name: "{{ kvm_host_interface }}"
 
 # set storage device to dedicate to /var/lib/libvirt/images
-kvm_host_libvirt_extra_disk: ""
+kvm_host_libvirt_extra_disk: "{{ kvm_host_libvirt_extra_disk }}"
 
 # setup NFS Server 
 setup_nfs: true

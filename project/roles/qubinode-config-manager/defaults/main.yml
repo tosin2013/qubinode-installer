@@ -1,0 +1,107 @@
+---
+# defaults file for qubinode-config-manager
+# Qubinode yaml config flags 
+collect_generic_info: false
+configure_secerts: false 
+configure_kvm_host: false 
+configure_idm_info: false 
+configure_rhel_vm_info: false
+configure_generic_vm_info: false 
+
+# set storage device to dedicate to /var/lib/libvirt/images
+kvm_host_libvirt_extra_disk: ""
+libvirt_dev: ""
+
+# Qubinode Project Information
+instance_prefix: qbn
+product: ocp4
+admin_user: admin
+inventory_dir: "/home/{{ admin_user }}/qubinode-installer/inventory"
+env_dir: "/home/{{ admin_user }}/qubinode-installer/env"
+vm_inventory_dir: "/home/{{ admin_user }}/qubinode-installer/project/host_vars"
+project_dir: "/home/{{ admin_user }}/qubinode-installer/"
+# Qubinode ssh user password secert
+admin_user_password: ""
+
+# Red Hat Subscription Information 
+rhsm_org: ""
+rhsm_activationkey: ""
+rhsm_username: username
+rhsm_password: ""
+rhsm_reg_method: "Username and Password" # set "Activation Key" to use activation key
+
+# RHEL qcow images 
+qcow_rhel_name: rhel-server-7.8-x86_64-kvm.qcow2 # for rhel 8 qcow rhel-8.2-x86_64-kvm.qcow2
+os_qcow_image_name: "{{ qcow_rhel_name }}"
+
+# DNS information 
+dns_forwarder: 1.1.1.1
+domain: "example.lab"
+vm_domain: "example.lab"
+public_domain: "example.lab"
+
+# Idm information 
+idm_admin_user: admin
+idm_dm_pwd: ""
+idm_hostname: "{{ instance_prefix }}-dns01"
+ipa_host: "{{ idm_hostname }}.{{ domain }}"
+idm_realm: '{{ domain | upper }}'
+# IdM Secert information 
+idm_ssh_user: ""
+idm_dm_pwd: ""
+idm_admin_pwd: ""
+
+#Cluster information
+cluster_name: qbn
+
+# Network Information
+nat_network_name: "{{ cluster_name }}"
+vm_libvirt_net: "qubinet"
+qubinode_bridge_name: qubibr0
+kvm_bridge_type: Bridge
+kvm_host_bootproto: none
+kvm_host_gw: "{{ ansible_default_ipv4.gateway }}"
+kvm_host_interface: "{{ ansible_default_ipv4.interface }}"
+kvm_host_ip: "{{ ansible_default_ipv4.address }}"
+kvm_host_macaddr: "{{ ansible_default_ipv4.macaddress }}"
+net_mask: "{{ ansible_default_ipv4.network }}/{{ ansible_default_ipv4.netmask }}"
+kvm_host_mask_prefix: "{{ net_mask | ipaddr('prefix') }}"
+kvm_host_netmask: "{{ ansible_default_ipv4.netmask }}"
+vm_net_gateway: "{{ kvm_host_gw }}"
+vm_net_netmask: "{{ kvm_host_netmask }}"
+
+# Ansible Tower Secerts 
+tower_pg_password: ""
+tower_rabbitmq_password: ""
+
+# VM Options 
+vm_teardown: false # defaulting to false 
+cloud_init_vm_image: "{{ qcow_rhel_name }}"
+
+# RHEL SERVER Defaults
+rhel_server_vm:
+  rhel_enable: true
+  rhel_extra_storage:
+  - enable: false
+    size: ''
+  rhel_group: rhel
+  rhel_memory: 800
+  rhel_name: 'rhelbox-1'
+  rhel_recreate: false
+  rhel_root_disk_size: 20G
+  rhel_teardown: false
+  rhel_vcpu: 1
+
+# GENERIC VM Defaults
+generic_server_vm:
+  generic_enable: true
+  generic_extra_storage:
+  - enable: false
+    size: ''
+  generic_group: generic
+  generic_memory: 800
+  generic_name: 'genericbox-1'
+  generic_recreate: false
+  generic_root_disk_size: 20G
+  generic_teardown: false
+  generic_vcpu: 1

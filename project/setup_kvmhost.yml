@@ -2,6 +2,7 @@
 - name: setup KVM host
   hosts: localhost
   become: yes
+  gather_facts: true
   vars_files:
     - ../inventory/rhel8_host_vars
     - ../inventory/kvm_host.yml
@@ -14,10 +15,12 @@
         state: directory
         mode: '0755'
 
-    - fail: msg="Checking to see if host_device is defined."
+    - name: Checking to see if host_device is defined
+      fail: msg="Checking to see if host_device is defined."
       when: host_device is not defined
 
-    - fail: msg="Checking to see if vg_name is defined."
+    - name: Checking to see if vg_name is defined.
+      fail: msg="Checking to see if vg_name is defined."
       when: vg_name is not defined
 
     - name: create libvirt logical volume
@@ -25,25 +28,19 @@
          name: swygue-lvm
       when: create_lvm|bool
 
-    - fail: msg="Checking to see if network_interface_name is defined."
+    - name: Checking to see if network_interface_name is defined.
+      fail: msg="Checking to see if network_interface_name is defined."
       when: network_interface_name is not defined
-
-    - name: Check whether ifcfg-{{ network_interface_name }} contains "UUID"
-      command: grep -Fxq "UUID" /etc/sysconfig/network-scripts/ifcfg-{{ network_interface_name }}
-      register: interfacecheck
-      check_mode: no
-      ignore_errors: yes
 
     - name: check if ifcfg-{{ network_interface_name }} backup file exists
       stat:
         path: "{{ project_dir }}/backups/ifcfg-{{ network_interface_name }}"
-      register: interfacecheck
+      register: resolvehostcheck
       delegate_to: 127.0.0.1
 
     - name: backup ifcfg-{{ network_interface_name }}
       shell: "cat /etc/sysconfig/network-scripts/ifcfg-{{ network_interface_name }} > {{ project_dir }}/backups/ifcfg-{{ network_interface_name }}"
-      ignore_errors: yes
-      when: interfacecheck.stat.exists
+      when: not resolvehostcheck.stat.exists
       delegate_to: 127.0.0.1
 
     - name: running KVM host setup

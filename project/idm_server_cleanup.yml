@@ -20,7 +20,7 @@
         src: "{{ project_dir }}/backups/resolv.conf"
         dest: /etc/resolv.conf  # link to /path/to/file
         follow: yes
-      when: resolv_backup.stat.exists == True
+      when: resolv_backup.stat.exists |bool
 
     - name: REMOVE|ensure host is removed from inventory
       vars:
@@ -29,3 +29,4 @@
         path: "{{ inventory_file }}"
         regexp: "^{{ vm_name }}"
         state: absent
+

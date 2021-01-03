@@ -1,0 +1,6 @@
+#!/bin/bash 
+
+PROJECT_DIR=${1}
+VAULT_PATH=${2}
+cd $1
+ansible-vault encrypt ${VAULT_PATH}/passwords

@@ -1,0 +1,24 @@
+---
+- name: Configure Secert Information
+  include_tasks: configure_secerts.yml
+  when: configure_secerts|bool
+
+- name: Collect Generic Server Information
+  include_tasks: generic_info.yml
+  when: collect_generic_info|bool
+
+- name: Configure KVM Host Information
+  include_tasks: configure_kvm_host.yml
+  when: configure_kvm_host|bool
+
+- name: Configure IDM DNS Server Information
+  include_tasks: configure_idm_info.yml
+  when: configure_idm_info|bool
+
+- name: Configure rhel_vm Information
+  include_tasks: configure_rhel_vm_info.yml
+  when: configure_rhel_vm_info|bool
+
+- name: Configure generic_vm Information
+  include_tasks: configure_generic_vm_info.yml
+  when: configure_generic_vm_info|bool

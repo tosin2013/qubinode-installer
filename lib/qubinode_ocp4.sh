@@ -8,9 +8,10 @@ function setup_required_paths () {
         config_err_msg; exit 1
     fi
 
-    if [ ! -d "${project_dir}/playbooks/vars" ] ; then
+    if [ ! -d "${project_dir}/project/vars" ] ; then
         config_err_msg; exit 1
     fi
+    DEPLOY_OCP4_PLAYBOOK="${project_dir}/project/deploy_ocp4.yml"
 }
 
 check_if_cluster_deployed () {
@@ -53,7 +54,7 @@ function qubinode_deploy_ocp4 () {
     # Check if openshift cluster is already deployed and running
     check_if_cluster_deployed
 
-    # load required files from samples to playbooks/vars/
+    # load required files from samples to project/vars/
     qubinode_required_prereqs
 
     # Add current user to sudoers, setup global variables, run additional
@@ -125,10 +126,10 @@ function openshift4_qubinode_teardown () {
     confirm " ${yel}Are you sure you want to delete the${end} ${grn}$product_opt${end} ${yel}cluster${end}? yes/no"
     if [ "A${response}" == "Ayes" ]
     then
-        ansible-playbook "${deploy_product_playbook}" -e '{ tear_down: True }' || exit $?
-        test -f "${ocp_vars_file}" && rm -f "${ocp_vars_file}"
-        printf "%s\n\n\n\n" " }"
-        printf "%s\n\n" " ${grn}OpenShift Cluster destroyed!${end}"
+        DEPLOY_OCP4_PLAYBOOK="${project_dir}/project/deploy_ocp4.yml"
+        ansible-playbook "${DEPLOY_OCP4_PLAYBOOK}" -e '{ tear_down: True }' || exit $?
+        test -f "${project_dir}/project/vars/ocp4.yml" && rm -f "${project_dir}/project/vars/ocp4.yml"
+        printf "%s\n\n\n\n" " ${grn}OpenShift Cluster destroyed!${end}"
         
     else
         exit 0
