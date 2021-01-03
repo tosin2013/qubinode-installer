@@ -86,7 +86,7 @@ function check_rhsm_status () {
     {
         echo "Testing"
     }
-    
+}
 function get_rhsm_user_and_pass () {
     if grep '""' "${vault_vars_file}"|grep -q rhsm_username
     then
