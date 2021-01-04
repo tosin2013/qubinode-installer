@@ -53,7 +53,8 @@
 
 - src: https://github.com/tosin2013/qubinode-config-manager.git
   version: dev
-collections:
+
+  collections:
   - name: 
     - containers.podman
     - community.general
