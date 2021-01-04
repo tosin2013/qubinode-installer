@@ -64,10 +64,10 @@ function main(){
             configure_centos8_packages
             install_requirements
             configure_vault_key
-            install_ansible_runner_service
-            generate_sshkey
-            set_ansible_config_env
-            configure_ansible_runner_systemd
+            #install_ansible_runner_service
+            #generate_sshkey
+            #set_ansible_config_env
+            #configure_ansible_runner_systemd
         else
             printf "%s\n"  "${red}Unknown RHEL Based server${end}"
             exit 1
