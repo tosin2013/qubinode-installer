@@ -65,7 +65,7 @@ function configure_ansible_runner_systemd(){
       sudo cp /tmp/ansible-runner-service/misc/systemd/ansible-runner-service.service /etc/systemd/system
       sudo systemctl enable ansible-runner-service.service
       sudo systemctl start ansible-runner-service.service
-      #sudo systemctl status ansible-runner-service.service
-      sed -i 's/cloud_user/admin/g'  /home/"${USER}"/qubinode-installer/lib/qubinode_ansible_runner.py 
+      sudo systemctl status ansible-runner-service.service || exit $?
+      sed -i 's/cloud_user/'${USER}'/g'  /home/"${USER}"/qubinode-installer/lib/qubinode_ansible_runner.py 
     fi
 }
