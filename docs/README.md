@@ -27,16 +27,21 @@ If you choose **Server with GUI**, make sure from the **Add-ons for Selected Evi
 >  * The RHEL installer will delicate the majority of your storage to /home,  you can choose **"I will configure partitioning"** to have control over this.
 >  * Set root password and create admin user with sudo privilege
 
-### The qubinode-installer
+### Download get_qubinode.sh and run the qubinode-installer setup
 
-Downlaod and extract the qubinode-installer as a non root user.
+As a non root user.
 
-```shell=
-cd $HOME
-wget https://github.com/Qubinode/qubinode-installer/archive/master.zip
-unzip master.zip
-rm master.zip
-mv qubinode-installer-master qubinode-installer
+1. Copy/paste the below command to download the get_qubinode.sh script.
+```shell=bash
+$(export qb_url="https://raw.githubusercontent.com/flyemsafe/qubinode-installer/newinstaller/lib/get_qubinode.sh"; curl -OL "$qb_url" >/dev/null 2>&1 || wget "$qb_url" >/dev/null 2>&1; chmod +x get_qubinode.sh)
+```
+
+2. Run the get_qubinode.sh script
+
+This step downloads the qubinode-installer to your home directory, then executes `$HOME/qubinode-installer/qubinode-installer -m setup`.
+
+```shell=bash
+./get_qubinode.sh
 ```
 
 ### Qubinode Setup

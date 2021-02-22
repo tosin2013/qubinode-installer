@@ -1,0 +1,11 @@
+---
+- name: setup KVM host
+  hosts: qubinode 
+  become: yes
+  vars_files:
+    - vars/qubinode_vars.yml
+    - vars/qubinode_vault.yml
+    - vars/kvm_host.yml
+
+  roles:
+    - role: qubinode_kvmhost_setup

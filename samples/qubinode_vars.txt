@@ -1,0 +1,139 @@
+## Set these vars to yes to force the installer to run these checks
+CONFIRM_USER_DOMAIN="${CONFIRM_USER_DOMAIN:-yes}"
+CONFIRM_NETWORKING="${CONFIRM_NETWORKING:-yes}"
+CONFIRM_LIBVIRT_NETWORK="${CONFIRM_LIBVIRT_NETWORK:-yes}"
+LIBVIRT_DIR_VERIFY="${LIBVIRT_DIR_VERIFY:-none}"
+
+## none root user
+QUBINODE_ADMIN_USER="${CURRENT_USER}"
+
+## all vms will be prefix with this name
+NAME_PREFIX="${NAME_PREFIX:-qbn}"
+
+
+##---------------------------------------------------------------------
+## Variables for bridge network interface / set to override installer
+##---------------------------------------------------------------------
+
+## Required for bridge networking
+CREATE_LIBVIRT_BRIDGE="${CREATE_LIBVIRT_BRIDGE:-no}"
+LIBVIRT_NETWORK_NAME="${LIBVIRT_NETWORK_NAME:-default}"
+LIBVIRT_BRIDGE_NAME="${LIBVIRT_BRIDGE_NAME:-qubibr0}"
+
+NETWORK_DEVICE="${NETWORK_DEVICE:-none}"
+IPADDRESS="${IPADDRESS:-none}"
+GATEWAY="${GATEWAY:-none}"
+NETMASK="${NETMASK:-none}"
+
+## optional
+MACADDR="${MACADDR:-none}"
+NETWORK="${NETWORK:-none}"
+NETMASK_PREFIX="${NETMASK_PREFIX:-none}"
+
+##---------------------------------------------------------------------
+## Varibles for DNS server
+##---------------------------------------------------------------------
+REVERSE_ZONE="${REVERSE_ZONE:-none}"
+DOMAIN="${DOMAIN:-$generated_domain}"
+
+##---------------------------------------------------------------------
+## Varibles for IdM server
+##---------------------------------------------------------------------
+IDM_HOSTNAME_PREFIX="${IDM_HOSTNAME_PREFIX:-idm01}"
+DEPLOY_IDM="${DEPLOY_IDM:-yes}"
+IDM_SERVER_HOSTNAME="${IDM_SERVER_HOSTNAME:-none}"
+IDM_ADMIN_USER="${IDM_ADMIN_USER:-admin}"
+IDM_SERVER_IP="${IDM_SERVER_IP:-none}"
+ALLOW_ZONE_OVERLAP="${ALLOW_ZONE_OVERLAP:-none}"
+USE_IDM_STATIC_IP="${USE_IDM_STATIC_IP:-yes}"
+IDM_EXISTING_ADMIN_USER="${IDM_EXISTING_ADMIN_USER:-none}"
+IDM_DEPLOY_METHOD="${IDM_DEPLOY_METHOD:-none}"
+
+##---------------------------------------------------------------------
+## Libvirt variables
+##---------------------------------------------------------------------
+PRIMARY_DISK="${PRIMARY_DISK:-none}"
+LIBVIRT_DIR="${LIBVIRT_DIR:-none}"
+LIBVIRT_POOL_DISK="${LIBVIRT_POOL_DISK:-none}"
+CREATE_LIBVIRT_STORAGE="${create_libvirt_lvm:-none}"
+LIBVIRT_DIR_POOL_NAME="${libvirt_pool_name:-default}"
+
+##---------------------------------------------------------------------
+## Varibles for RHSM
+##---------------------------------------------------------------------
+RHSM_SYSTEM="${RHSM_SYSTEM:-no}"
+RHEL_RELEASE="${RHEL_RELEASE:-none}"
+RHEL_MAJOR="${RHEL_MAJOR:-none}"
+RHEL_MINOR="${RHEL_MINOR:-none}"
+RHEL_VERSION="${RHEL_VERSION:-none}"
+SYSTEM_REGISTERED="${SYSTEM_REGISTERED:-no}"
+RHSM_REG_METHOD="${RHSM_REG_METHOD:-none}"
+
+##---------------------------------------------------------------------
+## Varibles for ansible role qubinode_kvmhost_setup
+##------------------------------------------------q---------------------
+KVM_HOST_IP="${IPADDRESS}"
+KVM_HOST_GW="${GATEWAY}"
+KVM_HOST_INTERFACE="${NETWORK_DEVICE}"
+KVM_HOST_MACADDR="${MACADDR}"
+KVM_HOST_NETMASK="${NETMASK}"
+KVM_HOST_MTU="${MTU-1500}"
+
+KVM_HOST_LIBVIRT_EXTRA_DISK="${LIBVIRT_POOL_DISK}"
+KVM_HOST_LIBVIRT_DIR="{LIBVIRT_DIR}"
+
+KVM_HOST_MASK_PREFIX="${KVM_HOST_MASK_PREFIX:-$NETMASK_PREFIX}"
+
+#LIBVIRT_POOL_NAME_CHECK="yes"
+#SKIP_LIBVIRT_POOL="yes"
+#RUN_STORAGE_CHECK="yes"
+#QUBINODE_INSTALLER_HOST_COMPLETED="yes"
+#RUN_QUBINODE_SETUP="yes"
+
+##---------------------------------------------------------------------
+## RHEL VM VARS
+##---------------------------------------------------------------------
+QCOW_RHEL7_NAME="${qcow_rhel7_name:-rhel-server-7.8-x86_64-kvm.qcow2}"
+QCOW_RHEL8_NAME="${qcow_rhel8_name:-rhel-8.3-x86_64-kvm.qcow2}" 
+RHEL_VM_DEFAULT_RELEASE="8"
+RHEL_VM_DEFAULT_QCOW_IMG="${QCOW_RHEL8_NAME}"
+rhel_server_vm=
+    rhel_name="${rhel_vm_hostname:-''}"
+    rhel_vcpu="${rhel_vm_vcpu:-''}"
+    rhel_memory="${rhel_vm_memory:-''}"
+    rhel_root_disk_size="${rhel_vm_disk:-''}"
+    rhel_teardown=false
+    rhel_recreate=false
+    rhel_group=rhel
+    rhel_extra_storage=
+      pdashpsize=''
+        enable=false
+    rhel_enable=true
+
+RHEL_VM_RELEASE="${rhel_vm_major_release:-8}"
+RHEL_VM_QCOW_RHEL_RELEASE="${RHEL_VM_RELEASE}"
+RHEL_VM_OS_RELEASE="${RHEL_VM_RELEASE}"
+
+##---------------------------------------------------------------------
+## Only edit below if you know what you are doing
+##---------------------------------------------------------------------
+## Qubinode project folder
+QUBINODE_PROJECT_DIR="${project_dir:-none}"
+VAULT_FILE="${VAULT_FILE:-none}"
+QUBINODE_ANSIBLE_VARS="${QUBINODE_ANSIBLE_VARS:-none}"
+
+DOMAIN_TLD="${DOMAIN_TLD:-lab.qubinode.io}"
+QUBINODE_BASELINE_COMPLETE="${QUBINODE_BASELINE_COMPLETE:-no}"
+
+OS_NAME="${OS_NAME:-none}"
+
+ANSIBLE_INSTALLED="${ANSIBLE_INSTALLED:-none}"
+PYTHON3_INSTALLED="${PYTHON3_INSTALLED:-none}"
+
+ALL_DISK="${ALL_DISK:-none}"
+ALL_INTERFACES="${ALL_INTERFACES:-none}"
+
+YUM_PACKAGES="python3-pyyaml python36 python3-pip python3-dns ansible git podman python-podman-api toolbox ipcalc"
+PIP_PACKAGES="yml2json"
+RHEL8_REPOS="rhel-8-for-x86_64-baseos-rpms rhel-8-for-x86_64-appstream-rpms ansible-2-for-rhel-8-x86_64-rpms"
+

@@ -1,4 +1,4 @@
-localhost               ansible_connection=local ansible_user=root
+qubinode               ansible_connection=local ansible_user=root
 
 [ipaserver]
 

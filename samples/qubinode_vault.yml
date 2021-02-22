@@ -1,0 +1,22 @@
+## this is generated on the file and should not be edited directly
+## you can create playbooks/vars/user_vault.yml to override or add 
+## your own vaulted variables
+
+## when RHSM_REG_METHOD="Username"
+rhsm_username: ${RHSM_USERNAME:-none}
+rhsm_password: ${RHSM_PASSWORD:-none}
+
+## when RHSM_REG_METHOD="Activation"
+rhsm_org: ${RHSM_ORG:-none}
+rhsm_activationkey: ${RHSM_ACTKEY:-none}
+
+## admin or current user password
+admin_user_password: ${ADMIN_USER_PASSWORD:-none}
+
+## Idm Server
+idm_dm_pwd: ${IDM_DM_PASS:-$RANDOM_GENERATED_PASS}
+idm_admin_pwd: ${idm_admin_pwd:-$RANDOM_GENERATED_PASS}
+
+## Tower Server
+tower_pg_password: ${TOWER_PG_PASS:-$RANDOM_GENERATED_PASS}
+tower_rabbitmq_password: ${TOWER_MQ_PASS:-$RANDOM_GENERATED_PASS}

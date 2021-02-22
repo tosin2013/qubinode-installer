@@ -1,160 +1,320 @@
 #!/usr/bin/env bash
-set -E
-set -o functrace
 
-# Define colours
+## Enable xtrace if the DEBUG environment variable is set
+if [[ ${DEBUG-} =~ ^1|yes|true$ ]]; then
+    set -o xtrace       # Trace the execution of the script (debug)
+fi
+
+set -o errexit          # Exit on most errors (see the manual)
+set -o errtrace         # Make sure any error trap is inherited
+set -o nounset          # Disallow expansion of unset variables
+#set -o pipefail         # Use last non-zero exit code in a pipeline
+
+## setup colours used
+# shellcheck disable=SC2034 # use to indicate errors
 red=$'\e[1;31m'
-grn=$'\e[1;32m'
+# shellcheck disable=SC2034 # used to indicate success
 yel=$'\e[1;33m'
+# shellcheck disable=SC2034 # used to indicate heading
 blu=$'\e[1;34m'
-mag=$'\e[1;35m'
+# shellcheck disable=SC2034 # use to highlight words
 cyn=$'\e[1;36m'
+# shellcheck disable=SC2034 # unsed
+grn=$'\e[1;32m'
+# shellcheck disable=SC2034 # unsed
+mag=$'\e[1;35m'
+# shellcheck disable=SC2034 # unsed
 def=$'\e[1;49m'
+# shellcheck disable=SC2034 # used to close one of the colors
 end=$'\e[0m'
 
-# define formatting
-txend=$(tput sgr0)   # reset attributes
-txb=$(tput bold)   # bold
-txu=$(tput smul)   # underline
-txuend=$(tput rmul)   # exit underline
-
-# Define Header
-divider===============================
-divider=$divider$divider
-header="\n %-035s %010s\n"
-format=" %-035s %010s\n"
-width=50
-
-
-# Uncomment for debugging
-#export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
-#set -x
-
-# Turn verbose off
-_V=1
-
-function config_err_msg () {
-    cat << EOH >&2
-  There was an error finding the full path to the qubinode-installer project directory.
-EOH
-}
-
-# this function just make sure the script
-# knows the full path to the project directory
-# and runs the config_err_msg if it can't determine
-# that start_deployment.conf can find the project directory
-function setup_required_paths () {
-    project_dir="`dirname \"$0\"`"
-    project_dir="`( cd \"$project_dir\" && pwd )`"
-    if [ -z "$project_dir" ] ; then
-        config_err_msg; exit 1
-    fi
-
-    if [ ! -d "${project_dir}/playbooks/vars" ] ; then
-        config_err_msg; exit 1
-    fi
-}
-
-##       MAIN               ##
-##############################
-
-# load pre functions
-teardown="false"
-CURRENT_USER=$(whoami)
-rhel_major=$(sed -rn 's/.*([0-9])\.[0-9].*/\1/p' /etc/redhat-release)
-CHECK_PULL_SECRET=no
-setup_required_paths
-
-# Include all required functions
-. "${project_dir}/lib/qubinode_menu_welcome.sh"
-. "${project_dir}/lib/qubinode_installer_prereqs.sh"
-. "${project_dir}/lib/qubinode_utils.sh"
-. "${project_dir}/lib/qubinode_menu_options.sh"
-. "${project_dir}/lib/setup_sudo.sh"
-. "${project_dir}/lib/qubinode_userinput.sh"
-. "${project_dir}/lib/qubinode_kvmhost.sh"
-. "${project_dir}/lib/qubinode_requirements.sh"
-. "${project_dir}/lib/qubinode_idm.sh"
-. "${project_dir}/lib/qubinode_ansible.sh"
-. "${project_dir}/lib/qubinode_rhsm.sh"
-. "${project_dir}/lib/qubinode_ocp4_utils.sh"
-. "${project_dir}/lib/qubinode_ocp4.sh"
-. "${project_dir}/lib/qubinode_satellite.sh"
-. "${project_dir}/lib/qubinode_tower.sh"
-. "${project_dir}/lib/qubinode_rhel.sh"
-
-
-# Exit if this is executed as the root user
-if is_root; then
-    echo "Error: qubi-installer should be run as a normal user, not as root!"
-    exit 1
+## Find the source path for the qubinode-installer script
+project_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+if [ ! -d "${project_dir}/playbooks/vars" ] ; then
+    printf "%s\n" "  ${red}There was an error finding the full path to the qubinode-installer project directory${end}"
 fi
 
-echo ""
-echo ""
-OPTIND=1
-NUM_ARGS="$#"
-ALL_ARGS="$@"
 
-while getopts ":c:dvhm:p:a:" opt;
-do
-    case $opt in
-        a) check_args;
-           full_deploy=true
-           product_options+=("$OPTARG")
-           ;;
-        c) check_args
-           check=true
-           cluster=true
-           cluster_opt=$OPTARG
-           ;;
-        d) check_args;
-           teardown=true
-           ;;
-        h) display_help
-           exit 1
-           ;;
-        m) check_args;
-           qubinode_maintenance=true
-           qubinode_maintenance_opt=$OPTARG;
-           ;;
-        p) check_args
-           check=true
-           qubinode_product=true
-           qubinode_product_opt=$OPTARG
-           ;;
-        v) check_args;
-           _V=1
-           ;;
-       --) shift; break;;
-       -*) echo Unrecognized flag : "$1" >&2
-           display_help
-           exit 1
-           ;;
-       \?) echo Unrecognized flag : "$1" >&2
-           display_help
-           exit 1
-           ;;
-    esac
-done
-shift "$((OPTIND-1))"
-
-# If not arguments pass, run default option to install OpenShift
-if (( $OPTIND == 1 ))
+## check for lib/global_functions.sh and source it
+## or exit if it's now found
+GLOBAL_FUNCTIONS="${project_dir}/lib/qubinode_functions.sh"
+if [ -f "$GLOBAL_FUNCTIONS" ]
 then
-    display_openshift_msg_ocp4
-elif [ "A${qubinode_product}" == "Atrue" ] && [ "A${qubinode_maintenance}" == "Atrue" ]
-then
-    product_maintenance="${qubinode_maintenance_opt}"
-    qubinode_product_deployment $qubinode_product_opt
-elif [ "A${qubinode_maintenance}" == "Atrue" ]
-then
-    qubinode_maintenance_options
-elif [ "A${qubinode_product}" == "Atrue" ]
-then
-    qubinode_product_deployment $qubinode_product_opt
+    # shellcheck disable=SC1091
+    # shellcheck source=lib/global_functions.sh
+    source "$GLOBAL_FUNCTIONS"
 else
-    display_help
+    echo "Could not find $GLOBAL_FUNCTIONS. Make sure you are in the qubinode-installer directory"
 fi
 
-exit 0
+# GLOBAL Variables
+CURRENT_USER=$(whoami)
+vault_key_file="/home/${CURRENT_USER}/.vaultkey"
+VAULT_FILE="${project_dir:?}/playbooks/vars/qubinode_vault.yml"
+VAULT_SAMPLE_FILE="${project_dir:?}/samples/qubinode_vault.yml"
+QUBINODE_ANSIBLE_VARS="${project_dir:?}/playbooks/vars/qubinode_vars.yml"
+QUBINODE_ANSIBLE_JSON="${project_dir:?}/playbooks/vars/qubinode_vars.json"
+QUBINODE_BASH_VARS_TEMPLATE="${project_dir:?}/samples/qubinode_vars.txt"
+QUBINODE_ANSIBLE_VARS_TEMPLATE="${project_dir:?}/samples/qubinode_vars.yml"
+# shellcheck disable=SC2034  # called when vault file is generated
+RANDOM_GENERATED_PASS=$(tr -dc A-Za-z0-9 < /dev/urandom | head -c 8)
+export ANSIBLE_REQUIREMENTS_FILE="${project_dir}/playbooks/requirements.yml"
+QUBINODE_INVENTORY_DIR="${project_dir}/inventory"
+QUBINODE_INVENTORY_FILE="${QUBINODE_INVENTORY_DIR}/hosts"
+QUBINODE_INVENTORY_SAMPLE_FILE="${project_dir}/samples/hosts"
+QUBINODE_BASH_VARS="${project_dir:?}/qubinode_vars.txt"
+
+
+## Load existing vars
+QUBINODE_ADMIN_USER="${QUBINODE_ADMIN_USER:-$CURRENT_USER}"
+domain_tld="${DOMAIN_TLD:-lab.qubinode.io}"
+export generated_domain="${QUBINODE_ADMIN_USER}.${domain_tld}"
+ANSIBLE_INSTALLED="${ANSIBLE_INSTALLED:-no}"
+PYTHON3_INSTALLED="${PYTHON3_INSTALLED:-no}"
+load_qubinode_vars
+
+## load variables from vault
+## this should be refactored for speed, it currently takes 3 seconds to load
+load_vault_vars
+
+## OS Check
+pre_os_check
+
+## check if ansible is installed
+if which ansible > /dev/null 2>&1
+then
+  ANSIBLE_INSTALLED=yes
+fi
+
+## check if python3 is installed
+if which python3> /dev/null 2>&1
+then
+  PYTHON3_INSTALLED=yes
+fi
+
+
+## this function ensure the system is ready for ansible and python
+## in addition it collects all the required information required
+function qubinode_baseline () {
+    ## vars to track with function run has completed
+    declare -a BASELINE_STATUS=()
+    BASELINE_STATUS+=(initiate)
+
+    ## get the password for the admin user   
+    ask_for_admin_user_pass
+
+    ## check sudoers status
+    setup_sudoers "${admin_user_password:-none}"
+
+    ## Check system registration status
+    ask_user_for_rhsm_credentials
+    check_rhsm_status
+    register_system
+
+    ## install required software dependancies
+    install_packages
+
+    ## install ansible roles and collections
+    qubinode_setup_ansible
+
+    ## Confirm storage setup
+    #getPrimaryDisk
+    check_additional_storage
+    
+    ## confirm if you want to use the generated domain    
+    ask_about_domain
+
+    ## ask if you want to deploy a IdM server for DNS and LDAP
+    ask_about_idm
+
+    ## Get main network interface details
+    setup_networking
+
+    ## Set baseline run to complete
+    if [ "${#BASELINE_STATUS[@]}" -eq 9 ]
+    then
+        export QUBINODE_BASELINE_COMPLETE=yes
+    fi
+}
+
+## this function generates the required vars file
+function qubinode_vars () {
+    ## Generate bash variables file
+    TMP_BASH_VARS_FILE=$(mktemp)
+    CURRENT_BASH_VARS_FILE_BKUP=$(mktemp)
+    
+    # Default gen file
+    ## make a copy of the current bash vars file
+    #if [ -f "$QUBINODE_BASH_VARS" ]
+    #then
+    #    #set -o allexport
+    #    # shellcheck disable=SC1091
+    #    # shellcheck source=playbooks/vars/qubinode_vars.yml
+    #    #source "$QUBINODE_BASH_VARS"
+    #    #set +o allexport
+    #    cp "$QUBINODE_BASH_VARS" "$CURRENT_BASH_VARS_FILE_BKUP"
+    #    rm -f "$QUBINODE_BASH_VARS"
+    #fi
+
+    ## Generate an updated bash vars file
+    ( echo "cat <<EOF>$QUBINODE_BASH_VARS";
+    cat "$QUBINODE_BASH_VARS_TEMPLATE";
+    printf "\nEOF";
+    ) >"$TMP_BASH_VARS_FILE"
+
+    # shellcheck source=/dev/null
+    . "$TMP_BASH_VARS_FILE"
+
+    ## Generate ansible vars yaml template
+    ANSIBLE_TEMPLATE=$(mktemp)
+    TMP_ANSIBLE_FILE=$(mktemp)
+    
+    test -f "$QUBINODE_ANSIBLE_VARS" && rm -f "$QUBINODE_ANSIBLE_VARS"
+    cp "$QUBINODE_ANSIBLE_VARS_TEMPLATE" "$ANSIBLE_TEMPLATE"
+    cat "$QUBINODE_BASH_VARS" >> "$ANSIBLE_TEMPLATE"
+    sed -i 's/=/: /g' "$ANSIBLE_TEMPLATE"
+    sed -i 's/pdashp/- /g' "$ANSIBLE_TEMPLATE"
+    
+    ( echo "cat <<EOF>$QUBINODE_ANSIBLE_VARS";
+    cat "$ANSIBLE_TEMPLATE";
+    printf "\nEOF";
+    ) >"$TMP_ANSIBLE_FILE"
+
+    # shellcheck source=/dev/null
+    . "$TMP_ANSIBLE_FILE"
+    
+    ## Final clean up
+    sed -i 's#^[[:alpha:]].*:#\L&#g' "$QUBINODE_ANSIBLE_VARS"
+    sed -i 's/"yes"/yes/g' "$QUBINODE_ANSIBLE_VARS"
+    sed -i 's/"no"/no/g' "$QUBINODE_ANSIBLE_VARS"
+    
+    ## Generate JSON for future use
+    #if which yml2json > /dev/null 2>&1
+    #then
+    #    yml2json "$QUBINODE_ANSIBLE_VARS" --pretty --output "$QUBINODE_ANSIBLE_JSON"
+    #fi
+
+    ## Ensure inventory file exist
+    if [ ! -f "${QUBINODE_INVENTORY_FILE}" ]
+    then
+        cp "$QUBINODE_INVENTORY_SAMPLE_FILE" "$QUBINODE_INVENTORY_FILE"
+    fi
+}
+
+function qubinode_vault_file () 
+{
+    if [ -f /usr/bin/ansible ] && [ ! -f "${vault_key_file}" ]
+    then
+        printf "%s\n" " Created ansible-vault password file ${vault_key_file}"
+        openssl rand -base64 512|xargs > "${vault_key_file}"
+    fi
+
+    ## Generate an updated vault file
+    TMP_VAULT_FILE=$(mktemp)
+
+    ( echo "cat <<EOF>$VAULT_FILE";
+    cat "$VAULT_SAMPLE_FILE";
+    printf "\nEOF";
+    ) >"$TMP_VAULT_FILE"
+    # shellcheck source=/dev/null
+    . "$TMP_VAULT_FILE"
+
+    if ! ansible-vault view "${VAULT_FILE}" >/dev/null 2>&1
+    then
+        ansible-vault encrypt "${VAULT_FILE}" > /dev/null 2>&1
+    fi
+}
+
+function main ()
+{
+    # Exit if this is executed as the root user
+    if is_root 
+    then
+        echo "Error: qubinode-installer should be run as a normal user, not as root!"
+    exit 1
+    fi
+
+    qubinode_product=false
+    local product_options=("")
+    local qubinode_maintenance=""
+    local product_maintenance=""
+    export NUM_ARGS="$#"
+    export ALL_ARGS="$@"
+    while getopts ":c:dvhm:p:a:" opt;
+    do
+        case $opt in
+            a) 
+	            check_args;
+                full_deploy=true
+                product_options+=("$OPTARG")
+                ;;
+            c) 
+	           check_args
+               check=true
+               cluster=true
+               cluster_opt=$OPTARG
+               ;;
+            d) 
+	           check_args;
+               teardown=true
+               ;;
+            h) 
+	           display_help
+               exit 1
+               ;;
+            m) 
+	           check_args;
+               qubinode_maintenance=true
+               qubinode_maintenance_opt=$OPTARG;
+               ;;
+            p) 
+	           check_args
+               check=true
+               qubinode_product=true
+               qubinode_product_opt=$OPTARG
+               ;;
+            v) 
+	            check_args;
+               _V=1
+               ;;
+           --) 
+	           shift; 
+	           break
+	           ;;
+           -*) 
+	           echo Unrecognized flag : "$1" >&2
+               display_help
+               exit 1
+               ;;
+           \?) 
+	           echo Unrecognized flag : "$1" >&2
+               display_help
+               exit 1
+               ;;
+        esac
+    done
+    shift "$((OPTIND-1))" 
+
+    # If not arguments pass, run default option to install OpenShift
+    if (( "$OPTIND" == 1 ))
+    then
+	    echo "$OPTIND"
+        echo "this will eventually run display_openshift_msg_ocp4"
+    elif [ "A${qubinode_product}" == "Atrue" ] && [ "A${qubinode_maintenance}" == "Atrue" ]
+    then
+        export product_maintenance="${qubinode_maintenance_opt}"
+        qubinode_product_deployment "${qubinode_product_opt}"
+    elif [ "A${qubinode_maintenance}" == "Atrue" ]
+    then
+        qubinode_maintenance_options
+    elif [ "A${qubinode_product}" == "Atrue" ]
+    then
+        qubinode_product_deployment $qubinode_product_opt
+    else
+        display_help
+    fi
+
+}
+
+main "$@"
+
