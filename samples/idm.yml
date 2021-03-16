@@ -23,7 +23,7 @@ idm_reverse_zones:
 rhel_major: "8"
 qcow_rhel_release: "{{ rhel_major }}"
 rhel_release: "{{ rhel_major }}"
-cloud_init_vm_image: rhel-8.3-update-2-x86_64-kvm.qcow2
+cloud_init_vm_image: rhel-8.3-update-2-ppc64le-kvm.qcow2 
 idm_server_ip: ""
 idm_public_ip: ""
 idm_zone_overlap: false
@@ -53,8 +53,8 @@ os_release: "rhel{{ rhel8_version }}"
 #######################
 # IdM on RHEL 8 attributes
 idm_repos_8:
-  - rhel-8-for-x86_64-baseos-rpms
-  - rhel-8-for-x86_64-appstream-rpms
+  - rhel-8-for-ppc64le-baseos-rpms
+  - rhel-8-for-ppc64le-appstream-rpms
 
 #########################
 # IdM on RHEL 7 attributes
